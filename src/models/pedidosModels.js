@@ -102,71 +102,59 @@ return result.recordset;
         }
     },
 
-    atualizarPedido: async (idPedido, dataPedido, tipoEntrega, distanciaKm, pesoCarga, valorBaseKm, valorBaseKg) => {
+     atualizarPedido: async (idPedido,idCliente,dataPedido, tipoEntrega, distanciaKM, pesoCarga, valorBaseKM, valorBaseKg) => {
         try {
             const pool = await getConnection();
             const querySQL = `
-            UPDATE Pedidos 
-            SET idCliente = @idCliente,
-            dataPedido = @idPedido
-            tipoEntrega = @tipoEntrega
-            distanciaKm = @distanciaKm
-            pesoCarga = @pesoCarga
-            valorBaseKm = @valorBaseKm
+            UPDATE PEDIDOS
+            SET dataPedido = @dataPedido,
+            idCliente = @idCliente,
+            tipoEntrega = @tipoEntrega,
+            distanciaKM = @distanciaKM,
+            pesoCarga = @pesoCarga,
+            valorBaseKM = @valorBaseKM,
             valorBaseKg = @valorBaseKg
-            Where idPedido = @idPedido
+            WHERE idPedido = @idPedido
             `
             await pool.request()
+                .input("idPedido", sql.UniqueIdentifier, idPedido)
+                .input("idCliente", sql.UniqueIdentifier, idCliente)
                 .input("dataPedido", sql.Date, dataPedido)
                 .input("tipoEntrega", sql.VarChar(7), tipoEntrega )
-                .input("distanciaKm", sql.Decimal(10, 2), distanciaKm)
+                .input("distanciaKM", sql.Decimal(10, 2), distanciaKM)
                 .input("pesoCarga", sql.Decimal(10, 2),pesoCarga )
-                .input("valorBaseKm", sql.Decimal(10, 2), valorBaseKm)
+                .input("valorBaseKM", sql.Decimal(10, 2), valorBaseKM)
                 .input("valorBaseKg", sql.Decimal(10, 2), valorBaseKg)
-                .input("idCliente", sql.UniqueIdentifier, idCliente)
                 .query(querySQL)
+
 
         } catch (error) {
             console.error("Erro ao atualizar pedido:", error);
             throw error;
-            
+
+
         }
-
-        
     },
-    deletarPedido: async (idPedido) => { 
-
-    const pool = await getConnection();
-    const transaction = new sql.Transaction();
-    await transaction.begin();
 
 
+    deletarPedido: async (idPedido) => {
         try {
-            
-            let querySQL =  ` 
-            DELETE FROM  ItemPedido
-            WHERE idPedido =  @idPedido
-            `
-
-            await transaction.request()
-            .input("idPedido", sql.UniqueIdentifier, idPedido)
+            const pool = await getConnection();
+   
+            const querySQL = 'DELETE FROM PEDIDOS WHERE idPedido = @idPedido'
+   
+            await pool.request()
+            .input('idPedido', sql.UniqueIdentifier, idPedido)
             .query(querySQL);
-
-    querySQL = `
-    DELETE FROM  Pedidos
-    WHERE idPedido =  @idPedido
-    `
-        await transaction.request()
-            .input("idPedido", sql.UniqueIdentifier, idPedido)
-            .query(querySQL);
-
-            await transaction.commit
         } catch (error) {
-            await transaction.rollback();
-            console.error("ERRO ao deletar o pedido", error)
+            console.error(`Erro ao deletar o pedido`, error);
             throw error;
         }
-    }
+        }
+
+
+
+
 
 };
 

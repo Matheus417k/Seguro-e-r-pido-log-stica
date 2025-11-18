@@ -56,7 +56,84 @@ const pedidoController ={
             res.status(500).json({ erro: "Erro interno no servidor ao cadastrar pedido!" });
         }
     },
-    
+     atualizarPedido: async (req, res) => {
+        try {
+            const {idPedido} = req.params;
+            const {idCliente, dataPedido, tipoEntrega, distanciaKM, pesoCarga, valorBaseKM, valorBaseKg} = req.body
+
+
+            if (idPedido.length != 36) {
+                return res.status(400).json({erro: "id do pedido invalido"})
+            }
+            const pedido = await pedidoModels.buscarUm(idPedido);
+            if (!pedido || pedido.length !==1){
+                return res.status(404).json({erro:"Pedido não encontrado"});
+            }
+            if(idCliente){
+            if (idCliente.length != 36) {
+                return res.status(400).json({erro: "id do clinete invalido"})
+            }
+        }
+
+
+        const cliente = await clienteModels.buscarUm(idCliente);
+            if(!cliente|| cliente.length  !== 1){
+                return res.status(404).json({erro: "Cliente não encontrado"})
+            }
+const pedidoAtual = pedido[0];
+const idClienteAtualizado = idCliente ?? pedidoAtual.idCliente;
+const dataPedidoAtualizado = dataPedido ?? pedidoAtual.dataPedido;
+const tipoEntregaAtualizado = tipoEntrega ?? pedidoAtual.tipoEntrega;
+const distanciaKmAtualizado = distanciaKM ?? pedidoAtual.distanciaKm;
+const pesoCargaAtualizado = pesoCarga ?? pedidoAtual.pesoCarga;
+const valorBaseKmAtualizado = valorBaseKM ?? pedidoAtual.valorBaseKm;
+const valorBaseKgAtualizado = valorBaseKg ?? pedidoAtual.valorBaseKg
+
+
+await pedidoModels.atualizarPedido(idPedido, idClienteAtualizado,dataPedidoAtualizado, tipoEntregaAtualizado,
+distanciaKmAtualizado,pesoCargaAtualizado, valorBaseKgAtualizado, valorBaseKmAtualizado);
+
+
+res.status(200).json ({mensagem: "Pedido atualizado com sucesso"})
+
+
+        } catch (error) {
+            console.error("ERRO ao atualizar o pedido");
+            res.status(500).json({erro: "erro imterno no servidor ao atualizar pedido!"});
+        }
+    },
+    deletarPedido: async (req, res) => {
+        try {
+            const {idPedido} = req.params;
+
+
+
+
+            if (idPedido.length != 36) {
+                return res.status(400).json({erro: "id do pedido invalido"})
+            }
+
+
+            const pedido = await pedidoModels.buscarUm(idPedido);
+
+
+            if (!pedido || pedido.length != 1) {
+                return res.status(404).json({erro: "Pedido não encontrado!"})
+            }
+
+
+            await pedidoModels.deletarPedido(idPedido);
+
+
+
+
+            res.status(200).json({message: "Pedido deletado com sucesso!"})
+        } catch (error) {
+            console.error("Erro ao atualizar pedido", error)
+            res.status(500).json({erro: "Erro interno no servidor ao deletar pedido"})
+        }
+    }
+
     }
     
     module.exports = { pedidoController }
