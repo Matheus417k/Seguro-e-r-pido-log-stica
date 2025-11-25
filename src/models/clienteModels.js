@@ -86,7 +86,7 @@ inserirCliente: async (nomeCliente, cpfCliente, telefoneCliente, emailCliente, e
         .query(querySQL);
 
 
-       
+    
     } catch (error) {
         console.error('Erro ao inserir o cliente', error);
         throw error; // Passa o erro para o controler tratar
