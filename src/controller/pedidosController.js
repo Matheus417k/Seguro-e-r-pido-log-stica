@@ -73,6 +73,15 @@ const pedidoController = {
                 valorFinal += taxaEntregaFinal;
             }
 
+            let statusEntregaDefault = "calculado";
+            if (statusEntrega) {
+                if (statusEntrega.toLowerCase() != "calculado" && statusEntrega.toLowerCase() != "em transito" && statusEntrega.toLowerCase() != "cancelado" && statusEntrega.toLowerCase() != "entregue") {
+                    return res.status(400).json({erro: "Status da entrega do pedido inválido!"});
+                }
+
+                statusEntregaDefault = statusEntrega;
+            }
+
             
             const idPedido = await pedidoModels.criarPedido(
                 idCliente,
@@ -82,11 +91,13 @@ const pedidoController = {
                 pesoCarga,
                 valorBaseKM,
                 valorBaseKg,
+                valorDistancia,
+                valorPeso,
                 acrescimoEntrega,
                 descontoEntrega,
                 taxaEntregaFinal,
-                statusEntrega,
-                valorFinal
+                valorFinal,
+                statusEntregaDefault
             );
 
             res.status(201).json({
@@ -110,79 +121,140 @@ const pedidoController = {
                 distanciaKM,
                 pesoCarga,
                 valorBaseKM,
-                valorBaseKg
+                valorBaseKg,
+                statusEntrega
             } = req.body;
-
-            if (idPedido.length !== 36) {
+    
+            if (!idPedido || idPedido.length !== 36) {
                 return res.status(400).json({ erro: "ID do pedido inválido!" });
             }
-
+    
             const pedido = await pedidoModels.buscarUm(idPedido);
-            if (!pedido || pedido.length !== 1) {
+    
+            
+            if (!pedido || !pedido[0]) {
                 return res.status(404).json({ erro: "Pedido não encontrado!" });
             }
-
+    
             if (idCliente && idCliente.length !== 36) {
                 return res.status(400).json({ erro: "ID do cliente inválido!" });
             }
-
-            const cliente = await clienteModels.buscarUm(idCliente);
-            if (!cliente || cliente.length !== 1) {
-                return res.status(404).json({ erro: "Cliente não encontrado!" });
+    
+            
+            if (idCliente) {
+                const cliente = await clienteModels.buscarUm(idCliente);
+    
+                if (!cliente || !cliente[0]) {
+                    return res.status(404).json({ erro: "Cliente não encontrado!" });
+                }
             }
-
+    
+            let valorDistancia = distanciaKM * valorBaseKM;
+            let valorPeso = pesoCarga * valorBaseKg;
+            let valorFinal = valorPeso + valorDistancia;
+    
+            let acrescimoEntrega = 0;
+            let descontoEntrega = 0;
+            let taxaEntregaFinal = 0;
+    
+            if (tipoEntrega && tipoEntrega.toLowerCase() === "urgente") {
+                acrescimoEntrega = valorFinal * 0.2;
+                valorFinal += acrescimoEntrega;
+            }
+    
+            if (valorFinal > 500) {
+                descontoEntrega = valorFinal * 0.1;
+                valorFinal -= descontoEntrega;
+            }
+    
+            if (pesoCarga > 50) {
+                taxaEntregaFinal = 15;
+                valorFinal += taxaEntregaFinal;
+            }
+    
+            let statusEntregaDefault = "calculado";
+    
+            if (statusEntrega) {
+                const statusLower = statusEntrega.toLowerCase();
+    
+                if (
+                    statusLower !== "calculado" &&
+                    statusLower !== "em transito" &&
+                    statusLower !== "cancelado" &&
+                    statusLower !== "entregue"
+                ) {
+                    return res.status(400).json({ erro: "Status da entrega do pedido inválido!" });
+                }
+    
+                statusEntregaDefault = statusEntrega;
+            }
+    
             const atual = pedido[0];
-
+    
+            const idClienteAtualizado = idCliente ?? atual.idCliente;
+            const dataPedidoAtualizado = dataPedido ?? atual.dataPedido;
+            const tipoEntregaPedidoAtualizado = tipoEntrega ?? atual.tipoEntrega;
+            const distanciaPedidoAtualizado = distanciaKM ?? atual.distanciaKM;
+            const pesoPedidoAtualizado = pesoCarga ?? atual.pesoCarga;
+            const valorBaseKMPedidoAtualizado = valorBaseKM ?? atual.valorBaseKM;
+            const valorBaseKgPedidoAtualizado = valorBaseKg ?? atual.valorBaseKg;
+            const valorDistanciaEntregaAtualizado = valorDistancia ?? atual.valorDistancia;
+            const valorPesoEntregaAtualizado = valorPeso ?? atual.valorPeso;
+            const valorFinalEntregaAtualizado = valorFinal ?? atual.valorFinal;
+            const acrescimoEntregaAtualizado = acrescimoEntrega ?? atual.acreEntrega;
+            const descontoEntregaAtualizado = descontoEntrega ?? atual.descEntrega;
+            const taxaExtraEntregaAtualizado = taxaEntregaFinal ?? atual.taxaEntrega;
+            const statusEntregaAtualizado = statusEntrega ?? atual.statusEntrega;
+    
             await pedidoModels.atualizarPedido(
                 idPedido,
-                idCliente ?? atual.idCliente,
-                dataPedido ?? atual.dataPedido,
-                tipoEntrega ?? atual.tipoEntrega,
-                distanciaKM ?? atual.distanciaKm,
-                pesoCarga ?? atual.pesoCarga,
-                valorBaseKM ?? atual.valorBaseKm,
-                valorBaseKg ?? atual.valorBaseKg
+                idClienteAtualizado,
+                dataPedidoAtualizado,
+                tipoEntregaPedidoAtualizado,
+                distanciaPedidoAtualizado,
+                pesoPedidoAtualizado,
+                valorBaseKMPedidoAtualizado,
+                valorBaseKgPedidoAtualizado,
+                valorDistanciaEntregaAtualizado,
+                valorPesoEntregaAtualizado,
+                valorFinalEntregaAtualizado,
+                acrescimoEntregaAtualizado,
+                descontoEntregaAtualizado,
+                taxaExtraEntregaAtualizado,
+                statusEntregaAtualizado
             );
-
+    
             res.status(200).json({ mensagem: "Pedido atualizado com sucesso!" });
-
+    
         } catch (error) {
             console.error("Erro ao atualizar pedido:", error);
             res.status(500).json({ erro: "Erro interno no servidor ao atualizar pedido!" });
         }
     },
 
-    deletarPedidoEntrega: async (req, res) => {
+    deletarPedido: async (req, res) => {
         try {
-            const { idPedido, idEntrega } = req.params;
+            const { idPedido } = req.params;
 
-            if (idPedido.length !== 36) {
+            if (!idPedido || idPedido.length !== 36) {
                 return res.status(400).json({ erro: "ID do pedido inválido!" });
             }
-            
-            if (idEntrega.length !== 36) {
-                return res.status(400).json({ erro: "ID da entrega inválido!" });
-            }
+
             const pedido = await pedidoModels.buscarUm(idPedido);
+    
             if (!pedido || pedido.length !== 1) {
                 return res.status(404).json({ erro: "Pedido não encontrado!" });
             }
 
-            const entrega = await entregaModels.buscarUm(idEntrega);
-            if (!entrega || entrega.length !== 1) {
-                return res.status(404).json({ erro: "Entrega não encontrada!" });
-            }
-
             await pedidoModels.deletarPedido(idPedido);
-            await entregaModels.deletarEntrega(idEntrega);
-
-            res.status(200).json({ message: "Pedido e entrega cancelado com cancelado com sucesso!" });
-
+    
+            return res.status(200).json({ mensagem: "Pedido e entrega deletados com sucesso!" });
+    
         } catch (error) {
-            console.error("Erro ao cancelar pedido e entrega:", error);
-            res.status(500).json({ erro: "Erro interno no servidor ao cancelar pedido e entrega!" });
+            console.error("Erro ao deletar pedido:", error);
+            return res.status(500).json({ erro: "Erro interno no servidor ao deletar pedido!" });
         }
     }
-};
+}
 
 module.exports = { pedidoController };
