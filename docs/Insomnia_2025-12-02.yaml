@@ -1,0 +1,267 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Seguro Rapido Logistica
+meta:
+  id: wrk_f20627491adc45049f6fd97bdd113c9d
+  created: 1762879918344
+  modified: 1762879918344
+  description: ""
+collection:
+  - name: Clientes
+    meta:
+      id: fld_999538c53fb24a888c82337607742459
+      created: 1762879928957
+      modified: 1762879928957
+      sortKey: -1762879928957
+      description: ""
+    children:
+      - url: localhost:8081/clientes
+        name: Buscar Cliente
+        meta:
+          id: req_f1fd5a6f9f5e4270ae157d3056d09b34
+          created: 1762879934933
+          modified: 1764694555861
+          isPrivate: false
+          description: ""
+          sortKey: -1762879934933
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/clientes
+        name: Cadastrar Cliente
+        meta:
+          id: req_83bb305a223f413ba7da39ab64eded67
+          created: 1762879947699
+          modified: 1762883135929
+          isPrivate: false
+          description: ""
+          sortKey: -1762879947699
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "nomeCliente": "Dracula Meu irmão",
+                "cpfCliente": "11284758234",
+                "telefoneCliente": "19992876545",
+                "emailCliente": "draculanãosoueunão@gmail.com",
+            "enderecoCliente": "RJ, cidade Miguel Perera numero 260"
+                }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/clientes
+        name: Atualizar
+        meta:
+          id: req_29514b90dcd04484baa9fd78cc9f3d31
+          created: 1764694405905
+          modified: 1764694440545
+          isPrivate: false
+          description: ""
+          sortKey: -1764694405905
+        method: PUT
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/clientes
+        name: Deletar
+        meta:
+          id: req_be224871807243fc867138fd2866aa9f
+          created: 1764694423797
+          modified: 1764694443125
+          isPrivate: false
+          description: ""
+          sortKey: -1764694423797
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Pedidos
+    meta:
+      id: fld_542d7d4255dd499b881514b780c45a89
+      created: 1764694453665
+      modified: 1764694453665
+      sortKey: -1762577281131
+      description: ""
+    children:
+      - url: localhost:8081/pedidos
+        name: Buscar
+        meta:
+          id: req_2a1240badbbf4f70968b65a48f483838
+          created: 1764694453670
+          modified: 1764694487589
+          isPrivate: false
+          description: ""
+          sortKey: -1762879934933
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/pedidos
+        name: Cadastrar
+        meta:
+          id: req_d114f516db564c27952cb09d6477621b
+          created: 1764694453675
+          modified: 1764694494141
+          isPrivate: false
+          description: ""
+          sortKey: -1762879947699
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "nomeCliente": "Dracula Meu irmão",
+                "cpfCliente": "11284758234",
+                "telefoneCliente": "19992876545",
+                "emailCliente": "draculanãosoueunão@gmail.com",
+            "enderecoCliente": "RJ, cidade Miguel Perera numero 260"
+                }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/pedidos
+        name: Atualizar
+        meta:
+          id: req_e0f1f7c9f15344edb8cec4f6bcff4ce0
+          created: 1764694453681
+          modified: 1764694472144
+          isPrivate: false
+          description: ""
+          sortKey: -1764694405905
+        method: PUT
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/pedidos
+        name: Deletar
+        meta:
+          id: req_52bc4e3f56e8438aa240b6d189fbae42
+          created: 1764694453686
+          modified: 1764694465707
+          isPrivate: false
+          description: ""
+          sortKey: -1764694423797
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Entregas
+    meta:
+      id: fld_1747b097baab4ac3b15be443c2398edd
+      created: 1764694515673
+      modified: 1764694515673
+      sortKey: -1762425957218
+      description: ""
+    children:
+      - url: localhost:8081/entregas
+        name: Buscar
+        meta:
+          id: req_d68787fc2d1e4ea6bf1a84374ea9c29f
+          created: 1764694515683
+          modified: 1764694534205
+          isPrivate: false
+          description: ""
+          sortKey: -1762879934933
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_fbb4bae87c17bd52c4b85537ccad03c585df4def
+    created: 1762879918356
+    modified: 1762879918356
+environments:
+  name: Base Environment
+  meta:
+    id: env_fbb4bae87c17bd52c4b85537ccad03c585df4def
+    created: 1762879918349
+    modified: 1762879918349
+    isPrivate: false

@@ -1,6 +1,5 @@
 const sql = require("mssql");
 
-
 const config = {
     user: process.env.USER_DB,
     password: process.env.PASSWORD_DB,
@@ -8,23 +7,19 @@ const config = {
     database: process.env.DATABASE_DB,
     options: {
         encrypt: true,
-        trustServerCertificate: true
+        trustServerCertificate: true 
     }
 }
 
-
 async function getConnection(){
     try {
-    
+        
         const pool = await sql.connect(config);
         return pool;
-
 
     } catch (error) {
         console.error(`Erro na conexão do SQL Server`, error);
     }
 }
 
-
 module.exports = {sql, getConnection};
-
