@@ -28,6 +28,8 @@ const {sql, getConnection} = require("../config/db")
 
 const pedidoModels = {  
     buscarTodos: async () => { // Buscar todos os pedidos atravez do metodo GET 
+
+        
         try {
             const pool = await getConnection();
 

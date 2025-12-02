@@ -1,7 +1,14 @@
 const { entregaModels } = require("../models/entregaModels");
 
 const entregaController = {
-
+/**
+@async
+* 
+* @function listarEntregas
+*  @returns {Promise<void>} Retorna uma respostas JSON com A lista de Entregas.
+* @throws Mostra no console e retorna o erro 500 se ocorrer falha ao listar Entregas.
+ * 
+ */
     // Método GET – Lista entregas
     listarEntregas: async (req, res) => {
         try {

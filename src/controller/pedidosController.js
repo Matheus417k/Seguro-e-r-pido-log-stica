@@ -5,11 +5,28 @@ const { clienteModels } = require("../models/clienteModels");
      * Controlador que lista todos os pedidos do Banco de Dados
      * 
      * @async
+     * 
      * @function listarPedidos
+     *  @returns {Promise<void>} Retorna uma respostas JSON com A lista de pedidos.
+     * @throws Mostra no console e retorna o erro 500 se ocorrer falha ao buscar os pedidos.
+     * 
+     * @function criarPedido
+     *  @returns {Promise<void>} Retorna uma respostas JSON com A criação de um pedidos.
+     * @throws Mostra no console e retorna o erro 500 se ocorrer falha ao criar os pedidos.
+     * 
+     * @function atualizarPedido
+     *  @returns {Promise<void>} Retorna uma respostas JSON com OS pedidos atualizados.
+     * @throws Mostra no console e retorna o erro 500 se ocorrer falha ao atualizar os pedidos.
+     * 
+     * @function deletarPedido
+     *  @returns {Promise<void>} Retorna uma respostas JSON vazia (201) caso deletado com sucesso.
+     * @throws Mostra no console e retorna o erro 500 se ocorrer falha ao deletar os pedidos.
+     * 
+     * 
      * @param {object} req -Objeto da requisição (recebido do cliente HTTP);
      * @param {object} res -Objeto da resposta (enviado ao cliente HTTP);
-     * @returns {Promise<void>} Retorna uma respostas JSON com A lista de pedidos.
-     * @throws Mostra no console e retorna o erro 500 se ocorrer falha ao buscar os pedidos.
+     *
+    
      */
 
 const pedidoController = {
